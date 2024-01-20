@@ -1,10 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, chromium } from '@playwright/test';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('has title', async () => {
+  const baseURL = process.env.URL
+  const browser = await chromium.launch()
+  const context = await browser.newContext()
+  await context.addCookies([{name: 's', url: baseURL,  value: process.env.COOKIE as string}])
+  const page = await context.newPage()
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+  await page.goto(new URL('search', baseURL).toString());
 });
 
 test('get started link', async ({ page }) => {
