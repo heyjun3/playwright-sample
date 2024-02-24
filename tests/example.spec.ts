@@ -9,7 +9,7 @@ test('wizard', async () => {
   })
   await context.addCookies([{ name: 's', url: baseURL, value: process.env.COOKIE as string }])
   const page = await context.newPage()
-  for (let i = 10; i < 100; i++) {
+  for (let i = 1; i < 100; i++) {
     const query = {
       page: i,
       paging_order: 2,
@@ -25,10 +25,15 @@ test('wizard', async () => {
       }
       url.push(new URL(path, baseURL).toString())
     }
-    console.warn(url.length)
+    log("url length", url.length)
     for (const u of url) {
-      await page.goto(u)
+      log("request url", u)
+      await page.goto(u, { timeout: 3 * 1000 })
       await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 3000)))
     }
   }
 });
+
+function log(...msg: any[]) {
+  console.warn(new Date(), ...msg)
+}
